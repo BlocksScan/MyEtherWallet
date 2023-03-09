@@ -37,19 +37,19 @@
     <div class="wallet-card-container">
       <img
         class="wallet-card"
-        :src="'https://mewcard.mewapi.io/?address=' + address"
+        :src="'https://mewcard.mewapi.io/?address=' + get0xAddress(address)"
         alt="MEW Card"
         @load="animateMewCard()"
       />
       <div class="inner-content pa-3 pa-sm-8 d-flex align-center">
         <div class="white pa-1" style="border-radius: 7px">
-          <qr-code :data="address" :height="132" :width="132" />
+          <qr-code :data="getXDCAddress(address)" :height="132" :width="132" />
         </div>
         <div class="pl-3">
           <div
             class="d-block monospace textDark-text container-qr--addr BalanceCardAddress"
           >
-            {{ getChecksumAddressString }}
+            {{ getXDCAddress(getChecksumAddressString) }}
           </div>
           <div
             class="d-inline-flex align-center cursor--pointer mt-4 pa-1"
@@ -80,8 +80,8 @@ export default {
   },
   methods: {
     copyAddress() {
-      clipboardCopy(this.address);
-      Toast(`Copied ${this.address} successfully!`, {}, SUCCESS);
+      clipboardCopy(this.getXDCAddress(this.address));
+      Toast(`Copied ${(this.getXDCAddressthis.address)} successfully!`, {}, SUCCESS);
     },
     getNetwork() {
       return this.network ? this.network.type.currencyName : 'ETH';

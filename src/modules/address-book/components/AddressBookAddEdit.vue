@@ -36,7 +36,7 @@
         </h5>
         <div class="d-flex align-center">
           <span id="item-addr" class="monospace mr-3 truncate">
-            {{ checksumAddressToAdd }}
+            {{ getXDCAddress(checksumAddressToAdd) }}
           </span>
           <mew-copy :copy-value="item.address" :tooltip="$t('common.copy')" />
         </div>
@@ -81,7 +81,7 @@
   -->
     <div v-if="editMode" class="mt-4 text-center">
       <mew-button
-        :title="$t('interface.address-book.remove-addr')"
+        title="Remove Address"
         :has-full-width="false"
         btn-size="small"
         btn-style="transparent"
@@ -166,9 +166,9 @@ export default {
     validAddress() {
       if (this.addressToAdd.length > 94) return false;
       return this.resolvedAddr.length > 0 && !this.resolvedAddr?.includes('.')
-        ? isAddress(this.resolvedAddr) ||
+        ? this.isXDCAddress(this.resolvedAddr) ||
             isValidCoinAddress(this.resolvedAddr).valid
-        : isAddress(this.lowercaseAddressToAdd) ||
+        : this.isXDCAddress(this.lowercaseAddressToAdd) ||
             isValidCoinAddress(this.lowercaseAddressToAdd).valid ||
             isValidCoinAddress(this.addressToAdd).valid;
     },
@@ -190,7 +190,7 @@ export default {
     },
     isMyAddress() {
       return (
-        this.address?.toLowerCase() === this.addressToAdd?.toLowerCase() ||
+        this.address?.toLowerCase() === this.get0xAddress(this.addressToAdd)?.toLowerCase() ||
         this.address?.toLowerCase() === this.resolvedAddr?.toLowerCase()
       );
     },
@@ -227,10 +227,10 @@ export default {
       });
     },
     checksumAddressToAdd() {
-      if (this.addressToAdd !== '' && isAddress(this.lowercaseAddressToAdd)) {
-        return toChecksumAddress(this.lowercaseAddressToAdd);
+      if (this.addressToAdd !== '' && this.isXDCAddress(this.lowercaseAddressToAdd)) {
+        return toChecksumAddress(this.get0xAddress(this.lowercaseAddressToAdd));
       }
-      return this.addressToAdd;
+      return this.get0xAddress(this.addressToAdd);
     },
     lowercaseAddressToAdd() {
       return this.addressToAdd.toLowerCase();
@@ -250,7 +250,7 @@ export default {
   },
   watch: {
     toAddress(newVal) {
-      this.addressToAdd = newVal;
+      this.addressToAdd = this.get0xAddress(newVal);
     },
     addressToAdd(newVal) {
       this.nametag = '';
@@ -272,10 +272,10 @@ export default {
     if (this.network.type.ens)
       this.nameResolver = new NameResolver(this.network, this.web3);
     if (this.addMode && this.toAddress) {
-      this.addressToAdd = this.toAddress;
+      this.addressToAdd = this.get0xAddress(this.toAddress);
     }
     if (this.editMode) {
-      this.addressToAdd = this.item.address;
+      this.addressToAdd = this.get0xAddress(this.item.address);
       this.nickname = this.item.nickname;
       this.currentIdx = this.addressBookStore.findIndex(
         item => item.address === this.item.address
@@ -320,8 +320,8 @@ export default {
     resolveName: throttle(async function () {
       if (this.nameResolver) {
         try {
-          await this.nameResolver.resolveName(this.addressToAdd).then(addr => {
-            this.resolvedAddr = addr;
+          await this.nameResolver.resolveName(this.get0xAddress(this.addressToAdd)).then(addr => {
+            this.resolvedAddr = this.get0xAddress(addr);
           });
         } catch (e) {
           this.resolvedAddr = '';
@@ -329,7 +329,7 @@ export default {
       }
     }, 500),
     setAddress(value) {
-      this.addressToAdd = value ? value : '';
+      this.addressToAdd = value ? this.get0xAddress(value) : '';
     },
     setNickname(value) {
       this.nickname = value;

@@ -41,7 +41,7 @@ import { isObject, throttle } from 'lodash';
 import WAValidator from 'multicoin-address-validator';
 import { getAddressInfo } from '@kleros/address-tags-sdk';
 
-import { isAddress, toChecksumAddress } from '@/core/helpers/addressUtils';
+import { isXDCAddress, toChecksumAddress } from '@/core/helpers/addressUtils';
 import NameResolver from '@/modules/name-resolver/index';
 import { ERROR, Toast } from '../toast/handler/handlerToast';
 
@@ -58,7 +58,7 @@ export default {
   props: {
     isValidAddressFunc: {
       type: Function,
-      default: isAddress
+      default: isXDCAddress
     },
     isHomePage: {
       type: Boolean,
@@ -93,7 +93,7 @@ export default {
       footer: {
         text: 'Need help?',
         linkTitle: 'Contact support',
-        link: 'mailto:support@myetherwallet.com'
+        link: 'mailto:support@blocksscan.io'
       }
     };
   },
@@ -137,11 +137,14 @@ export default {
       return this.address
         ? [
             {
-              address: toChecksumAddress(this.address),
+              address: this.getXDCAddress(toChecksumAddress(this.address)),
               nickname: 'My Address',
               resolverAddr: ''
             }
-          ].concat(this.addressBookStore)
+          ].concat(this.addressBookStore.map(e => {
+          e.address = this.getXDCAddress(e.address)
+          return e
+        }))
         : // If address is undefined set to MEW Donations
           [
             {
@@ -150,7 +153,10 @@ export default {
               nickname: 'MEW Donations',
               resolverAddr: '0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D'
             }
-          ].concat(this.addressBookStore);
+          ].concat(this.addressBookStore.map(e => {
+            e.address = this.getXDCAddress(e.address)
+            return e
+          }));
     },
     enableSave() {
       return this.isHomePage
@@ -158,15 +164,15 @@ export default {
         : this.isValidAddress && this.enableSaveAddress;
     },
     addrLabel() {
-      return this.label === '' ? this.$t('sendTx.to-addr') : this.label;
+      return this.label === '' ? this.$t('sendTx.to-addr') : this.label
     },
     addressOnly() {
-      return isAddress(this.resolvedAddr) && this.isValidAddress
+      return isXDCAddress(this.resolvedAddr) && this.isValidAddress
         ? this.resolvedAddr
         : '';
     },
     nameOnly() {
-      return !isAddress(this.resolvedAddr) && this.isValidAddress
+      return !isXDCAddress(this.resolvedAddr) && this.isValidAddress
         ? this.resolvedAddr || this.nametag
         : '';
     }
@@ -181,7 +187,7 @@ export default {
     },
     inputAddr(newVal) {
       this.nametag = '';
-      if (isAddress(newVal.toLowerCase())) {
+      if (isXDCAddress(newVal.toLowerCase())) {
         this.resolveAddress();
       } else {
         this.resolveName();
@@ -191,7 +197,7 @@ export default {
   mounted() {
     if (this.isOfflineApp) {
       this.footer = {
-        text: 'Need help? Email us at support@myetherwallet.com',
+        text: 'Need help? Email us at support@blocksscan.io',
         linkTitle: '',
         link: ''
       };
@@ -229,7 +235,7 @@ export default {
               : this.addressBookWithMyAddress.find(item => {
                   return value.toLowerCase() === item.address.toLowerCase();
                 });
-          this.inputAddr = value;
+          this.inputAddr = this.get0xAddress(value);
           this.resolvedAddr = '';
           /**
            * Checks if the address is valid
@@ -255,9 +261,9 @@ export default {
           /**
            * @emits setAddress
            */
-          this.$emit('setAddress', value, this.isValidAddress, {
+          this.$emit('setAddress', this.get0xAddress(value), this.isValidAddress, {
             type: inputType,
-            value: isObject(typeVal) ? typeVal.nickname : typeVal
+            value: isObject(typeVal) ? typeVal.nickname : this.get0xAddress(typeVal)
           });
           if (!this.isValidAddress) {
             await this.resolveName();

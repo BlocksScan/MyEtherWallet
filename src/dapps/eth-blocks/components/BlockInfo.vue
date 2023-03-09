@@ -233,7 +233,7 @@
       <!-- =================================================== -->
       <v-col v-if="isReserved" cols="12" class="d-flex align-center mt-3">
         <p class="textLight--text ml-5">
-          Please contact support@myetherwallet.com to inquire about this block.
+          Please contact support@blocksscan.io to inquire about this block.
         </p>
       </v-col>
     </v-row>

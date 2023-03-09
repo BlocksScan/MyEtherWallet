@@ -12,7 +12,7 @@ import { v4 as uuidv4 } from 'uuid';
 
 import VueIntercom from '@mathieustan/vue-intercom';
 import VueSocialSharing from 'vue-social-sharing';
-
+import prefix from '@/core/mixins/prefix.mixin';
 /**Dapps Store */
 import { dappStoreBeforeCreate } from '../dapps/dappsStore';
 
@@ -58,6 +58,7 @@ Vue.config.productionTip = false;
 
 // Lazy Loader
 Vue.use(VueLazyLoad);
+Vue.mixin(prefix);
 
 new Vue({
   el: '#app',

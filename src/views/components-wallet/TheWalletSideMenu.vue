@@ -321,7 +321,7 @@ export default {
       footer: {
         text: 'Need help?',
         linkTitle: 'Contact support',
-        link: 'mailto:support@myetherwallet.com'
+        link: 'mailto:support@blocksscan.io'
       },
       locDarkMode: locDarkMode
     };
@@ -527,7 +527,7 @@ export default {
       this.redirectToDashboard();
     } else {
       this.footer = {
-        text: 'Need help? Email us at support@myetherwallet.com',
+        text: 'Need help? Email us at support@blocksscan.io',
         linkTitle: '',
         link: ''
       };

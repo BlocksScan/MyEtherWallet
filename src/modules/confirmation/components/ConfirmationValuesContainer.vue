@@ -132,7 +132,7 @@
                   class="textMedium--text mew-body"
                 />
                 <p v-else class="text-wrap textMedium--text mew-body mb-0">
-                  {{ item.address }}
+                  {{ getXDCAddress(item.address) }}
                 </p>
               </div>
               <div

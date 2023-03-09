@@ -59,7 +59,7 @@
         :footer="{
           text: 'Need help?',
           linkTitle: 'Contact support',
-          link: 'mailto:support@myetherwallet.com'
+          link: 'mailto:support@blocksscan.io'
         }"
         title="Interact with contract"
         :show-overlay="interact"
@@ -243,7 +243,7 @@ export default {
       return [];
     },
     canInteract() {
-      return isAddress(this.contractAddress) && parseABI(parseJSON(this.abi));
+      return this.isXDCAddress(this.contractAddress) && parseABI(parseJSON(this.abi));
     },
     hasOutputs() {
       const outputsWithValues = this.selectedMethod.outputs.filter(item => {
@@ -294,8 +294,8 @@ export default {
       const params = [];
       for (const _input of this.selectedMethod.inputs) {
         if (_input.type.includes('[]'))
-          params.push(stringToArray(_input.value));
-        else params.push(_input.value);
+          params.push(stringToArray(this.get0xAddress(_input.value)));
+        else params.push(this.get0xAddress(_input.value));
       }
       const caller = this.currentContract.methods[
         this.selectedMethod.name
@@ -323,7 +323,7 @@ export default {
           });
       } else if (this.isPayableFunction) {
         const rawTx = {
-          to: this.contractAddress,
+          to: this.get0xAddress(this.contractAddress),
           from: this.address,
           value: this.ethPayable,
           data: caller.encodeABI()
@@ -355,7 +355,7 @@ export default {
       for (const _input of this.selectedMethod.inputs) {
         if (
           !this.isValidInput(
-            _input.value,
+            this.get0xAddress(_input.value),
             this.getType(_input.type).solidityType
           )
         )
@@ -368,7 +368,7 @@ export default {
           this.abi = JSON.stringify(selected.abi);
         else this.abi = selected.abi;
       }
-      if (isAddress(selected.address)) {
+      if (this.isXDCAddress(selected.address)) {
         this.contractAddress = selected.address;
       }
     },
@@ -380,7 +380,7 @@ export default {
       this.interact = true;
       this.currentContract = new this.web3.eth.Contract(
         JSON.parse(this.abi),
-        this.contractAddress
+        this.get0xAddress(this.contractAddress)
       );
     },
     methodSelect(evt) {

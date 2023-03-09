@@ -72,7 +72,7 @@
               </v-list-item>
             </v-list>
           </v-menu>
-          <mew-tooltip hide-icon :text="getChecksumAddressString">
+          <mew-tooltip hide-icon :text="getXDCAddress(getChecksumAddressString)">
             <template #activatorSlot>
               <div
                 class="justify-start d-flex align-center info-container--addr monospace"
@@ -344,7 +344,7 @@ export default {
      * returns checksummed address
      */
     getChecksumAddressString() {
-      return this.address ? toChecksumAddress(this.address) : '';
+      return this.address ? this.getXDCAddress(toChecksumAddress(this.address)) : '';
     },
     /**
      * checks whether hardware wallet
@@ -415,7 +415,7 @@ export default {
      * @returns {string} first 6 letters in the address
      */
     addrFirstSix() {
-      return this.address ? this.address.substring(0, 6) : '';
+      return this.address ? this.getXDCAddress(this.address.substring(0, 6)) : '';
     },
     /**
      * @returns {string} lat 4 letters in the address
@@ -448,6 +448,7 @@ export default {
   },
   mounted() {
     this.setupNameResolver();
+    console.log('=====', this)
   },
   methods: {
     ...mapActions('external', ['setTokenAndEthBalance']),

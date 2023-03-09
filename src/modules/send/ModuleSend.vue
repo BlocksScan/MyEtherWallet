@@ -559,7 +559,7 @@ export default {
     },
     toAddress() {
       if (this.isValidAddress) {
-        this.sendTx.setTo(this.toAddress, this.userInputType);
+        this.sendTx.setTo(this.get0xAddress(this.toAddress), this.userInputType);
       }
     },
     amount(newVal) {
@@ -739,7 +739,7 @@ export default {
       }
     },
     setAddress(addr, isValidAddress, userInputType) {
-      this.toAddress = addr;
+      this.toAddress = this.get0xAddress(addr);
       this.isValidAddress = isValidAddress;
       this.userInputType = userInputType;
     },
@@ -790,7 +790,7 @@ export default {
           : undefined;
         this.data = isHexStrict(this.prefilledData) ? this.prefilledData : '0x';
         this.amount = this.prefilledAmount;
-        this.toAddress = this.prefilledAddress;
+        this.toAddress = this.get0xAddress(this.prefilledAddress);
         this.gasLimit = this.prefilledGasLimit;
         this.selectedCurrency = foundToken ? foundToken : this.selectedCurrency;
         this.$refs.expandPanel.setToggle(true);

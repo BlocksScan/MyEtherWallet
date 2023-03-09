@@ -207,7 +207,7 @@
                     <v-col cols="12" md="9">
                       <app-scroll-block>
                         <div class="data-values text-md-right">
-                          {{ txVal.value }}
+                          {{ getXDCAddress(txVal.value) }}
                         </div>
                       </app-scroll-block>
                     </v-col>
@@ -297,7 +297,7 @@ export default {
       footer: {
         text: 'Need help?',
         linkTitle: 'Contact support',
-        link: 'mailto:support@myetherwallet.com'
+        link: 'mailto:support@blocksscan.io'
       },
       showTxOverlay: false,
       showSignOverlay: false,
@@ -626,7 +626,7 @@ export default {
   mounted() {
     if (this.isOfflineApp) {
       this.footer = {
-        text: 'Need help? Email us at support@myetherwallet.com',
+        text: 'Need help? Email us at support@blocksscan.io',
         linkTitle: '',
         link: ''
       };
@@ -1054,14 +1054,14 @@ export default {
           },
           {
             title: 'From address',
-            value: from
+            value: this.getXDCAddress(from)
           },
           {
             title:
               data !== '0x' && !this.isBatch
                 ? 'Via Contract Address'
                 : 'To address',
-            value: toAdd
+            value: this.getXDCAddress(toAdd)
           },
           {
             title: 'Sending',

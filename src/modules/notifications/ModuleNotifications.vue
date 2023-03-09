@@ -30,7 +30,7 @@
       :footer="{
         text: 'Need help?',
         linkTitle: 'Contact support',
-        link: 'mailto:support@myetherwallet.com'
+        link: 'mailto:support@blocksscan.io'
       }"
       title="Notifications"
       content-size="large"
@@ -74,7 +74,7 @@
         </div>
         <div v-show="notificationsByType.length === 0" class="pa-5 text-center">
           <h3 class="mb-5">No notifications to display for:</h3>
-          <h3 class="break-hash">{{ address }}</h3>
+          <h3 class="break-hash">{{ this.getXDCAddress(address) }}</h3>
         </div>
       </v-sheet>
     </mew-overlay>

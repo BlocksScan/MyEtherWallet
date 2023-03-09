@@ -17,7 +17,7 @@
               height="20"
               src="@/assets/images/icons/icon-support.svg"
             />
-            <div>support@myetherwallet.com</div>
+            <div>support@blocksscan.io</div>
           </div>
           <div class="d-flex align-center mr-3">
             <img
@@ -95,7 +95,7 @@
           </div>
         </v-col>
         <v-col cols="3" class="ml-auto">
-          <qr-code :data="key" :height="140" :width="140" :type-number="10" />
+          <qr-code :data="getXDCAddress(key)" :height="140" :width="140" :type-number="10" />
         </v-col>
       </v-row>
     </v-container>
@@ -122,7 +122,7 @@ export default {
       return null;
     },
     getChecksumAddressString() {
-      return this.address ? toChecksumAddress(this.address) : '';
+      return this.address ? this.getXDCAddress(toChecksumAddress(this.address)) : '';
     },
     showPrivateKey() {
       return !this.instance.isPubOnly;
