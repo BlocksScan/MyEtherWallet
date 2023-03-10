@@ -9,6 +9,8 @@ import xdcnetwork from './xdcnetwork-ws';
 import moonbeam from './moonbeam-ws';
 import moonriver from './moonriver-ws';
 import rootstock from './rootstock-ws';
+import apothemnetwork from './apothemnetwork-ws';
+
 
 export {
   etcethereumclassiccooperativeparityws,
@@ -21,5 +23,6 @@ export {
   xdcnetwork,
   moonbeam,
   moonriver,
-  rootstock
+  rootstock,
+  apothemnetwork
 };

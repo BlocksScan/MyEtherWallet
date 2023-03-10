@@ -9,6 +9,7 @@ import XDC from './XDC';
 import MOONBEAM from './MOONBEAM';
 import MOONRIVER from './MOONRIVER';
 import ROOTSTOCK from './ROOTSTOCK';
+import APOTHEM from './APOTHEM';
 
 export {
   ETH,
@@ -21,5 +22,6 @@ export {
   XDC,
   MOONBEAM,
   MOONRIVER,
-  ROOTSTOCK
+  ROOTSTOCK,
+  APOTHEM
 };
